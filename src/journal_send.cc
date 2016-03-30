@@ -3,6 +3,7 @@
 // and then finally calls sd_journal_sendv. Rocket science included!
 
 #include <nan.h>
+#include <systemd/sd-journal.h>
 
 void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
@@ -32,8 +33,8 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	}
 
-	// TODO: DUMMY
-	int ret = argc;
+	// Send to journald
+	int ret = sd_journal_sendv( iov, argc );
 
 	// Free the memory again
 	for( int i = 0; i < argc; i++ ) {
