@@ -21,7 +21,9 @@
     "test": "mocha",
     "pretest": "jshint *.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "nan": "^2.2.1"
+  },
   "devDependencies": {
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
