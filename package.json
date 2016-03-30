@@ -1,0 +1,15 @@
+{
+  "name": "systemd-journald",
+  "version": "0.0.0",
+  "description": "Native bindings to journald",
+  "keywords": [ "logging", "systemd", "journald" ],
+  "author": "Jue <me@jue.yt>",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jue89/node-systemd-journald.git"
+  },
+  "scripts": { },
+  "dependencies": { }
+}
