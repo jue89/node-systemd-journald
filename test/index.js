@@ -6,6 +6,7 @@ var mockery = require( 'mockery' );
 
 describe( "node-systemd-journald", function() {
 
+	var journal_send;
 	var log;
 
 	before( function( done ) {
@@ -16,6 +17,8 @@ describe( "node-systemd-journald", function() {
 			warnOnReplace: false,
 			warnOnUnregistered: false
 		} );
+		journal_send = require( './mocks/journal_send.js' );
+		mockery.registerMock( './build/Release/journal_send.node', journal_send );
 
 		// Require library under test
 		//log = TODO
