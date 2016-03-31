@@ -1,14 +1,14 @@
 "use strict";
 
-const assert = require( 'assert' );
-const mockery = require( 'mockery' );
+var assert = require( 'assert' );
+var mockery = require( 'mockery' );
 
 
-describe( "node-systemd-journald", () => {
+describe( "node-systemd-journald", function() {
 
-	let log;
+	var log;
 
-	before( ( done ) => {
+	before( function( done ) {
 
 		// Load mocks
 		mockery.enable( {
@@ -24,7 +24,7 @@ describe( "node-systemd-journald", () => {
 
 	} );
 
-	after( ( done ) => {
+	after( function( done ) {
 
 		// Remove all mocks
 		mockery.disable();

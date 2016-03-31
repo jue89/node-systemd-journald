@@ -33,7 +33,6 @@
     "esversion": 6,
     "node": true,
     "strict": true,
-    "varstmt": true,
     "loopfunc": true
   }
 }
