@@ -34,7 +34,8 @@ function log( priority, message, fields ) {
 	}
 
 	// Send it to out beloved journald
-	journal.send( iovec );
+
+	journal.send.apply( null, iovec );
 
 }
 

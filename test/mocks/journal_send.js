@@ -2,11 +2,12 @@
 
 var last = {};
 
-function send( iovec ) {
+function send() {
 
 	last = {};
 
-	iovec.forEach( function( line ) {
+	for( var i = 0; i < arguments.length; i++ ) {
+		var line = arguments[i];
 
 		var delimiterPosition = line.indexOf( '=' );
 		var name = line.substr( 0, delimiterPosition );
@@ -14,7 +15,7 @@ function send( iovec ) {
 
 		last[ name ] = value;
 
-	} );
+	}
 
 }
 
