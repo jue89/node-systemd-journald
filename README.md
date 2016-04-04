@@ -7,8 +7,9 @@ Successfully tested under NodeJS v0.10.36, v0.11.16, v0.12.12, v4.4.1, v5.9.1.
 
 ## Example
 
-This exmaple will start an ExpressJS server. Open your browser and visit: ```http://localhost:3000/{a}/{b}```
-The server will return the result of ```a``` divieded by ```b```. You feel subversive and may want to try ```b``` equals zero?! ;)
+This example will start an ExpressJS server. Open your browser and visit: ```http://localhost:3000/{a}/{b}```
+
+The server will return the result of ```a``` divided by ```b```. You feel subversive and may want to try ```b``` equals zero?! ;)
 
 ```javascript
 // npm install express systemd-journald
@@ -53,8 +54,8 @@ app.get( '/:a/:b', ( req, res ) => {
 
   } catch( e ) {
 
-    // The user screwed up! This will write the error message an stack trace to
-    // the journal with priority 3. Checkout your jornal:
+    // The user screwed up! This will write the error message and stack trace to
+    // the journal with priority 3. Checkout your journal:
     // $ journalctl -t awesome-devide -p 3 -o json-pretty
     log.err( e );
 
@@ -103,4 +104,4 @@ log.debug( message, fields );   // - 7
 
 ## Why?
 
-This module has been written after some unsuccessful attempts to get the module [journald](https://www.npmjs.com/package/journald) version 0.0.5 working under NodeJS 4.x / 5.x. Due to massive API changes of the v8 engine this module is fully broken from the point of view of recent NodeJS releases. So I rewrote it - this time with a little help of *Native Abstractions for Node.js* (nan). The guys from nan promised to ensure compatibility even on future API changes of v8.
+This module has been written after some unsuccessful attempts to get the module [journald](https://www.npmjs.com/package/journald) version 0.0.5 working under NodeJS 4.x / 5.x. Due to massive API changes of the v8 engine this module is fully broken from the point of view of recent NodeJS releases. So I rewrote it - this time with a little help of *Native Abstractions for Node.js* (nan). The nice guys from nan promised to ensure compatibility even on future API changes of v8. We will see ;)
