@@ -2,6 +2,21 @@
 
 var journal = require( './build/Release/journal_send.node' );
 
+function obj2iovec( iovec, obj, prefix ) {
+
+	if( prefix === undefined ) prefix = '';
+
+	// Go through all fields
+	for( var o in obj ) {
+		if( typeof obj[o] == 'object' ) {
+			obj2iovec( iovec, obj[o], prefix + o + "_" );
+		} else {
+			iovec.push( prefix + o + '=' + obj[o].toString() );
+		}
+	}
+
+}
+
 function log( priority, message, fields ) {
 
 	// If we haven't got a message, throw an error
@@ -29,9 +44,7 @@ function log( priority, message, fields ) {
 	iovec.push( "MESSAGE=" + message );
 
 	// Add additional fields
-	for( var f in fields ) {
-		iovec.push( f + '=' + fields[f].toString() );
-	}
+	obj2iovec( iovec, fields );
 
 	// Send it to out beloved journald
 

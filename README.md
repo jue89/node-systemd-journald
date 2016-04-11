@@ -99,7 +99,7 @@ log.debug( message, fields );   // - 7
 ```
 
  * ```message```: String or instance of Error.
- * ```fields```: Further key-value data attached to the journal. Quite handy for filtering the journal.
+ * ```fields```: Further key-value data attached to the journal. Nested objects will be also included in the journal. ```{ "OBJ": { "NESTED": "Chuck Norris" } }``` will become ```OBJ_NESTED=Chuck Norris```. Quite handy for filtering the journal.
 
 
 ## Why?
