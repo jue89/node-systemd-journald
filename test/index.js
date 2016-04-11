@@ -163,7 +163,11 @@ describe( "node-systemd-journald", function() {
 		log.debug( 'Test', {
 			NUMBER: 3,
 			BOOLEAN: true,
-			STRING: 'Chuck Norris'
+			STRING: 'Chuck Norris',
+			OBJ: {
+				NUMBER: 4
+			},
+			ARR: [ 5 ]
 		} );
 
 		try {
@@ -172,6 +176,8 @@ describe( "node-systemd-journald", function() {
 			assert.strictEqual( journal_send.getField( 'NUMBER' ), '3' );
 			assert.strictEqual( journal_send.getField( 'BOOLEAN' ), 'true' );
 			assert.strictEqual( journal_send.getField( 'STRING' ), 'Chuck Norris' );
+			assert.strictEqual( journal_send.getField( 'OBJ_NUMBER' ), '4' );
+			assert.strictEqual( journal_send.getField( 'ARR_0' ), '5' );
 			done();
 		} catch( e ) {
 			done( e );
