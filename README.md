@@ -70,14 +70,34 @@ app.listen( 3000 );
 
 ## Installation
 
+### Install build dependencies
 Debian-flavoured Linux distributions:
 
 ```bash
 sudo apt-get install build-essential \
-                     python \
                      pkg-config \
                      libsystemd-dev
+```
 
+On older versions of Ubuntu or Mint use this instead:
+
+```bash
+sudo apt-get install build-essential \
+                     pkg-config \
+                     libsystemd-journal-dev
+```
+
+RHEL 7 flavoured Linux distributions:
+
+```bash
+sudo yum install gcc gcc-c++ make git \
+                 systemd-devel
+```
+
+### NPM Install
+In all cases, once the build dependencies are installed:
+
+```bash
 npm install systemd-journald --save
 ```
 
