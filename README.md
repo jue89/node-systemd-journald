@@ -70,14 +70,34 @@ app.listen( 3000 );
 
 ## Installation
 
+### Install build dependencies
 Debian-flavoured Linux distributions:
 
 ```bash
 sudo apt-get install build-essential \
-                     python \
                      pkg-config \
                      libsystemd-dev
+```
 
+If the above doesn't work, it is likely that you are using an older version of systemd as it is shipped with Ubuntu <= 14.04 or Mint <= 17. No problem - [ianare](https://github.com/ianare) fixed that for you - just try this instead:
+
+```bash
+sudo apt-get install build-essential \
+                     pkg-config \
+                     libsystemd-journal-dev
+```
+
+RHEL 7 flavoured Linux distributions:
+
+```bash
+sudo yum install gcc gcc-c++ make git \
+                 systemd-devel
+```
+
+### NPM Install
+In all cases, once the build dependencies are installed:
+
+```bash
 npm install systemd-journald --save
 ```
 
