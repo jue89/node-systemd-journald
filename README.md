@@ -79,7 +79,7 @@ sudo apt-get install build-essential \
                      libsystemd-dev
 ```
 
-On older versions of Ubuntu or Mint use this instead:
+If the above doesn't work, it is likely that you are using an older version of systemd as it is shipped with Ubuntu <= 14.04 or Mint <= 17. No problem - [ianare](https://github.com/ianare) fixed that for you - just try this instead:
 
 ```bash
 sudo apt-get install build-essential \
