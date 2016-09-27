@@ -10,7 +10,7 @@ function obj2iovec( iovec, obj, prefix ) {
 	for( var o in obj ) {
 		if( typeof obj[o] == 'object' ) {
 			obj2iovec( iovec, obj[o], prefix + o + "_" );
-		} else {
+		} else if( prefix.length > 0 || o != 'PRIORITY' ) {
 			iovec.push( prefix + o + '=' + obj[o].toString() );
 		}
 	}
@@ -40,15 +40,13 @@ function log( priority, message, fields ) {
 	var iovec = [];
 
 	// Add default fields
-	iovec.push( "PRIORITY=" + priority );
 	iovec.push( "MESSAGE=" + message );
 
 	// Add additional fields
 	obj2iovec( iovec, fields );
 
 	// Send it to out beloved journald
-
-	journal.send.apply( null, iovec );
+	journal.send.apply( null, [ priority ].concat( iovec ) );
 
 }
 
@@ -74,4 +72,4 @@ for( var l in levels ) { ( function( prio, name ) {
 		log( prio, message, fields );
 	};
 
-} )( l, levels[ l ] ); }
+} )( l * 10, levels[ l ] ); }
