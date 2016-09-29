@@ -51,7 +51,7 @@ describe( "node-systemd-journald", function() {
 		log.emerg( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '0' );
+			assert.strictEqual( journal_send.getPrio(), 0 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -65,7 +65,7 @@ describe( "node-systemd-journald", function() {
 		log.alert( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '1' );
+			assert.strictEqual( journal_send.getPrio(), 1 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -79,7 +79,7 @@ describe( "node-systemd-journald", function() {
 		log.crit( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '2' );
+			assert.strictEqual( journal_send.getPrio(), 2 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -93,7 +93,7 @@ describe( "node-systemd-journald", function() {
 		log.err( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '3' );
+			assert.strictEqual( journal_send.getPrio(), 3 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -107,7 +107,7 @@ describe( "node-systemd-journald", function() {
 		log.warning( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '4' );
+			assert.strictEqual( journal_send.getPrio(), 4 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -121,7 +121,7 @@ describe( "node-systemd-journald", function() {
 		log.notice( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '5' );
+			assert.strictEqual( journal_send.getPrio(), 5 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -135,7 +135,7 @@ describe( "node-systemd-journald", function() {
 		log.info( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '6' );
+			assert.strictEqual( journal_send.getPrio(), 6 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -149,7 +149,7 @@ describe( "node-systemd-journald", function() {
 		log.debug( 'Test' );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '7' );
+			assert.strictEqual( journal_send.getPrio(), 7 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			done();
 		} catch( e ) {
@@ -171,7 +171,7 @@ describe( "node-systemd-journald", function() {
 		} );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '7' );
+			assert.strictEqual( journal_send.getPrio(), 7 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			assert.strictEqual( journal_send.getField( 'NUMBER' ), '3' );
 			assert.strictEqual( journal_send.getField( 'BOOLEAN' ), 'true' );
@@ -190,7 +190,7 @@ describe( "node-systemd-journald", function() {
 		log.debug( new Error( 'Test' ) );
 
 		try {
-			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '7' );
+			assert.strictEqual( journal_send.getPrio(), 7 );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
 			assert.notStrictEqual( journal_send.getField( 'STACK_TRACE' ), undefined );
 			done();
