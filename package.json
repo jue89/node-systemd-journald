@@ -22,12 +22,12 @@
     "pretest": "jshint *.js"
   },
   "dependencies": {
-    "nan": "^2.2.1"
+    "nan": "^2.4.0"
   },
   "devDependencies": {
-    "jshint": "^2.9.1",
-    "mocha": "^2.4.5",
-    "mockery": "^1.4.1"
+    "jshint": "^2.9.3",
+    "mocha": "^2.5.3",
+    "mockery": "^1.7.0"
   },
   "os": [
     "linux"
