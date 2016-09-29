@@ -43,14 +43,15 @@ app.get( '/:a/:b', ( req, res ) => {
 
     // Log this request with priority 7
     log.debug( "Just answered a request", {
-      'DIVIDEND'   : a,
-      'DIVISOR'    : b,
-      'QUOTIENT'   : q,
-      'REMOTE_ADDR': req.connection.remoteAddress
+      'dividend'   : a,
+      'divisor'    : b,
+      'quotient'   : q,
+      'remote_addr': req.connection.remoteAddress
     } );
 
     // Are you interested in the requests of a specific IP? Try:
     // $ journalctl -t awesome-devide REMOTE_ADDR={IP}
+    // As you can see, you have to enter the field names in capital letters.
 
   } catch( e ) {
 

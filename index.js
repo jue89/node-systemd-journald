@@ -8,10 +8,11 @@ function obj2iovec( iovec, obj, prefix ) {
 
 	// Go through all fields
 	for( var o in obj ) {
+		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
-			obj2iovec( iovec, obj[o], prefix + o + "_" );
+			obj2iovec( iovec, obj[o], prefix + name + "_" );
 		} else {
-			iovec.push( prefix + o + '=' + obj[o].toString() );
+			iovec.push( prefix + name + '=' + obj[o].toString() );
 		}
 	}
 
