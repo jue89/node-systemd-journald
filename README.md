@@ -2,7 +2,7 @@
 
 Node.js module for native bindings to the ~~dearly beloved~~ systemd-journald.
 
-Successfully tested under NodeJS v0.10.36, v0.11.16, v0.12.12, v4.4.1, v5.9.1.
+Successfully tested under NodeJS v0.10.47, v0.12.16, v4.6.0, v6.7.0
 
 
 ## Example
@@ -80,7 +80,7 @@ sudo apt-get install build-essential \
                      libsystemd-dev
 ```
 
-If the above doesn't work, it is likely that you are using an older version of systemd as it is shipped with Ubuntu <= 14.04 or Mint <= 17. No problem - [ianare](https://github.com/ianare) fixed that for you - just try this instead:
+If the above doesn't work, it is likely that you are using an older version of systemd as it is shipped with Ubuntu <= 14.04 or Mint <= 17. No problem just try this instead:
 
 ```bash
 sudo apt-get install build-essential \
@@ -108,20 +108,28 @@ npm install systemd-journald --save
 ```javascript
 const log = require( 'systemd-journald' );
 
-// The specific priority levels are defined by the OS and can vary, but typically:
-                                // Log level:
-log.emerg( message, fields );   // - 0
-log.alert( message, fields );   // - 1
-log.crit( message, fields );    // - 2
-log.err( message, fields );     // - 3
-log.warning( message, fields ); // - 4
-log.notice( message, fields );  // - 5
-log.info( message, fields );    // - 6
-log.debug( message, fields );   // - 7
+                                // Corresponding syslog level:
+log.emerg( message, fields );   // - LOG_EMERG
+log.alert( message, fields );   // - LOG_ALERT
+log.crit( message, fields );    // - LOG_CRIT
+log.err( message, fields );     // - LOG_ERR
+log.warning( message, fields ); // - LOG_WARNING
+log.notice( message, fields );  // - LOG_NOTICE
+log.info( message, fields );    // - LOG_INFO
+log.debug( message, fields );   // - LOG_DEBUG
 ```
 
  * ```message```: String or instance of Error.
  * ```fields```: Further key-value data attached to the journal. Nested objects will be also included in the journal. ```{ "OBJ": { "NESTED": "Chuck Norris" } }``` will become ```OBJ_NESTED=Chuck Norris```. Quite handy for filtering the journal.
+
+
+## Acknowledgement
+
+Sepcial thanks to:
+ * [ianare](https://github.com/ianare) for improving compatibility with older systemd versions.
+ * [jez9999](https://github.com/jez9999) for making this module immune to future changes of syslog levels.
+
+I owe you a drink!
 
 
 ## Why?
