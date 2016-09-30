@@ -8,10 +8,11 @@ function obj2iovec( iovec, obj, prefix ) {
 
 	// Go through all fields
 	for( var o in obj ) {
+		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
-			obj2iovec( iovec, obj[o], prefix + o + "_" );
-		} else {
-			iovec.push( prefix + o + '=' + obj[o].toString() );
+			obj2iovec( iovec, obj[o], prefix + name + "_" );
+		} else if( prefix.length > 0 || (name != 'PRIORITY' && name != 'MESSAGE') ) {
+			iovec.push( prefix + name + '=' + obj[o].toString() );
 		}
 	}
 
@@ -40,15 +41,13 @@ function log( priority, message, fields ) {
 	var iovec = [];
 
 	// Add default fields
-	iovec.push( "PRIORITY=" + priority );
 	iovec.push( "MESSAGE=" + message );
 
 	// Add additional fields
 	obj2iovec( iovec, fields );
 
 	// Send it to out beloved journald
-
-	journal.send.apply( null, iovec );
+	journal.send.apply( null, [ parseInt( priority ) ].concat( iovec ) );
 
 }
 

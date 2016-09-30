@@ -161,11 +161,11 @@ describe( "node-systemd-journald", function() {
 	it( "should append specified fields", function( done ) {
 
 		log.debug( 'Test', {
-			NUMBER: 3,
-			BOOLEAN: true,
-			STRING: 'Chuck Norris',
+			number: 3,
+			boolean: true,
+			string: 'Chuck Norris',
 			OBJ: {
-				NUMBER: 4
+				nUmBer: 4
 			},
 			ARR: [ 5 ]
 		} );
