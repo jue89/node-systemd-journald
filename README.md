@@ -108,6 +108,7 @@ npm install systemd-journald --save
 ```javascript
 const log = require( 'systemd-journald' );
 
+// The specific priority levels are defined by the OS and can vary, but typically:
                                 // Log level:
 log.emerg( message, fields );   // - 0
 log.alert( message, fields );   // - 1
