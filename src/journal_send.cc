@@ -10,7 +10,7 @@
 #include <syslog.h>
 
 // Macros for int to string conversion
-#define TO_STR_H(x) #x
+#define TO_STR_H(x) "" #x
 #define TO_STR(x) TO_STR_H(x)
 
 // Create an array of all Syslog priority numbers
@@ -44,7 +44,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Make sure first argument is a number
 	if( ! args[0]->IsNumber() ) {
-		Nan::ThrowTypeError( "Frist argument must be a number" );
+		Nan::ThrowTypeError( "First argument must be a number" );
 		return;
 	}
 

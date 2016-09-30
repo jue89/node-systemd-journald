@@ -5,9 +5,9 @@ var lastPrio = 0;
 
 function send( prio ) {
 
-	lastPrio = prio;
-
 	lastField = {};
+
+	lastField['PRIORITY'] = prio.toString();
 
 	for( var i = 1; i < arguments.length; i++ ) {
 		var line = arguments[i];
@@ -26,12 +26,8 @@ function getField( name ) {
 	return lastField[ name ];
 }
 
-function getPrio() {
-	return lastPrio;
-}
 
 module.exports = {
 	send: send,
-	getField: getField,
-	getPrio: getPrio
+	getField: getField
 };
