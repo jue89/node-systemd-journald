@@ -13,6 +13,10 @@
 #define TO_STR_H(x) "" #x
 #define TO_STR(x) TO_STR_H(x)
 
+// Instead of the locations being This file, Let users define their own 
+// CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
+#define SD_JOURNAL_SUPPRESS_LOCATION 1
+
 // Create an array of all Syslog priority numbers
 #define SYSLOG_PRIO_CNT 8
 const char *const syslogPrio[] = {
