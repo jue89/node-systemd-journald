@@ -5,6 +5,11 @@
 // Priority is a special case as it needs to be taken from the syslog.h
 // preprocessor definitions, which aren't available from JavaScript.
 
+
+// Instead of the locations being This file, Let users define their own 
+// CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
+#define SD_JOURNAL_SUPPRESS_LOCATION 1
+
 #include <nan.h>
 #include <systemd/sd-journal.h>
 #include <syslog.h>
