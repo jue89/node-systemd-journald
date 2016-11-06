@@ -11,7 +11,7 @@ function obj2iovec( iovec, obj, prefix ) {
 		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
 			obj2iovec( iovec, obj[o], prefix + name + "_" );
-		} else if( prefix.length > 0 || (name != 'PRIORITY' && name != 'MESSAGE') ) {
+		} else if( obj[o] != undefined && (prefix.length > 0 || (name != 'PRIORITY' && name != 'MESSAGE')) ) {
 			iovec.push( prefix + name + '=' + obj[o].toString() );
 		}
 	}
