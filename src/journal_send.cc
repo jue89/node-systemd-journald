@@ -2,16 +2,16 @@
 // Internet. It just copies an ordinary JavaScript string array into an iovec
 // and then finally calls sd_journal_sendv. Rocket science included!
 
-// Priority is a special case as it needs to be taken from the syslog.h
-// preprocessor definitions, which aren't available from JavaScript.
-
-
-// Instead of the locations being This file, Let users define their own 
-// CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
-#define SD_JOURNAL_SUPPRESS_LOCATION 1
 
 #include <nan.h>
+
+// Instead of the locations being this file, let the user define their own
+// CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
+#define SD_JOURNAL_SUPPRESS_LOCATION 1
 #include <systemd/sd-journal.h>
+
+// Priority is a special case as it needs to be taken from the syslog.h
+// preprocessor definitions, which aren't available from JavaScript.
 #include <syslog.h>
 
 // Macros for int to string conversion
