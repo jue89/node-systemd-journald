@@ -128,6 +128,7 @@ log.debug( message, fields );   // - LOG_DEBUG
 Sepcial thanks to:
  * [ianare](https://github.com/ianare) for improving compatibility with older systemd versions.
  * [jez9999](https://github.com/jez9999) for making this module immune to future changes of syslog levels.
+ * [Z3TA](https://github.com/Z3TA) is responsible for ```CODE_FILE```, ```CODE_FUNC``` and ```CODE_LINE``` being settable by the ```fields``` parameter.
 
 I owe you a drink!
 
