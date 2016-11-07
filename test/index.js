@@ -161,11 +161,11 @@ describe( "node-systemd-journald", function() {
 	it( "should append specified fields", function( done ) {
 
 		log.debug( 'Test', {
-			NUMBER: 3,
-			BOOLEAN: true,
-			STRING: 'Chuck Norris',
+			number: 3,
+			boolean: true,
+			string: 'Chuck Norris',
 			OBJ: {
-				NUMBER: 4
+				nUmBer: 4
 			},
 			ARR: [ 5 ]
 		} );
@@ -192,6 +192,9 @@ describe( "node-systemd-journald", function() {
 		try {
 			assert.strictEqual( journal_send.getField( 'PRIORITY' ), '7' );
 			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'Test' );
+			assert.strictEqual( journal_send.getField( 'CODE_LINE' ), '190' );
+			assert.strictEqual( journal_send.getField( 'CODE_FUNC' ), 'Context.<anonymous>' );
+			assert.strictEqual( journal_send.getField( 'CODE_FILE' ).substr( -13 ), 'test/index.js' );
 			assert.notStrictEqual( journal_send.getField( 'STACK_TRACE' ), undefined );
 			done();
 		} catch( e ) {

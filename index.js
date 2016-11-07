@@ -2,16 +2,19 @@
 
 var journal = require( './build/Release/journal_send.node' );
 
+var stackTraceRE = /at ([^\ ]+) \(([^:]+):([0-9]+):[0-9]+\)$/;
+
 function obj2iovec( iovec, obj, prefix ) {
 
 	if( prefix === undefined ) prefix = '';
 
 	// Go through all fields
 	for( var o in obj ) {
+		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
-			obj2iovec( iovec, obj[o], prefix + o + "_" );
-		} else {
-			iovec.push( prefix + o + '=' + obj[o].toString() );
+			obj2iovec( iovec, obj[o], prefix + name + "_" );
+		} else if( obj[o] !== undefined && (prefix.length > 0 || (name != 'PRIORITY' && name != 'MESSAGE')) ) {
+			iovec.push( prefix + name + '=' + obj[o].toString() );
 		}
 	}
 
@@ -31,24 +34,46 @@ function log( priority, message, fields ) {
 
 	// If the message is an instnce of Error, extract its message
 	if( message instanceof Error ) {
-		fields.STACK_TRACE = message.stack;
+
+		var stack = message.stack.toString();
+
+		// Store stack trace and message
+		fields.STACK_TRACE = stack;
 		message = message.message;
+
+		// Try to extract callee name, line and file
+		var tmp = stack.split('\n');
+		if( tmp.length >= 2 ) {
+
+			// Second line knows the error source
+			var errSource = tmp[1];
+
+			// Match regular expression and add info to iovec
+			var re = stackTraceRE.exec( errSource );
+			if( re !== null ) {
+				fields.CODE_FILE = re[2];
+				fields.CODE_FUNC = re[1];
+				fields.CODE_LINE = re[3];
+			}
+
+		}
+
 	} else if( typeof message != 'string' ) {
+
 		message = message.toString();
+
 	}
 
 	var iovec = [];
 
 	// Add default fields
-	iovec.push( "PRIORITY=" + priority );
 	iovec.push( "MESSAGE=" + message );
 
 	// Add additional fields
 	obj2iovec( iovec, fields );
 
-	// Send it to out beloved journald
-
-	journal.send.apply( null, iovec );
+	// Send it to our beloved journald
+	journal.send.apply( null, [ parseInt( priority ) ].concat( iovec ) );
 
 }
 
