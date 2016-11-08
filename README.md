@@ -2,7 +2,7 @@
 
 Node.js module for native bindings to the ~~dearly beloved~~ systemd-journald.
 
-Successfully tested under NodeJS v0.10.47, v0.12.16, v4.6.0, v6.7.0
+Successfully tested under NodeJS v0.10.48, v0.12.17, v4.6.1, v6.9.1, v7.0.0
 
 
 ## Example
