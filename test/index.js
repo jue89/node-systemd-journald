@@ -217,4 +217,20 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should prefer the identifier set in the options to the global identifier", function( done ) {
+
+		log.identifier = 'test-identifier';
+		log.debug( 'Test', {
+			syslog_identifier: 'local-identifier'
+		} );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'SYSLOG_IDENTIFIER' ), 'local-identifier' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
