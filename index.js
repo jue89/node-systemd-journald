@@ -64,6 +64,12 @@ function log( priority, message, fields ) {
 
 	}
 
+	if (module.exports.identifier) {
+
+		fields.SYSLOG_IDENTIFIER = module.exports.identifier;
+
+	}
+
 	var iovec = [];
 
 	// Add default fields

@@ -203,4 +203,18 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should set the syslog identifier", function( done ) {
+
+		log.identifier = 'test-identifier';
+		log.debug( 'Test' );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'SYSLOG_IDENTIFIER' ), 'test-identifier' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
