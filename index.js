@@ -64,6 +64,27 @@ function log( priority, message, fields ) {
 
 	}
 
+	// Set the syslog identifier, if possible
+	if ( module.exports.identifier ) {
+
+		// If the identifier is passed in via the fields object
+		// we want to use that one. So check if it is passed in.
+		var found = false;
+
+		for( var o in fields ) {
+			if (o.toUpperCase() == 'SYSLOG_IDENTIFIER') {
+				found = true;
+				break;
+			}
+		}
+
+		// If it wasn't passed in, use the global identifier
+		if ( !found ) {
+			fields.SYSLOG_IDENTIFIER = module.exports.identifier;
+		}
+
+	}
+
 	var iovec = [];
 
 	// Add default fields

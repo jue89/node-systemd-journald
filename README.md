@@ -19,7 +19,7 @@ const log = require( 'systemd-journald' );
 const app = require( 'express' )();
 
 // This will be the displayed name in the journal
-process.title = "awesome-devide";
+log.identifier = "awesome-divide";
 
 app.get( '/:a/:b', ( req, res ) => {
   try {
@@ -50,14 +50,14 @@ app.get( '/:a/:b', ( req, res ) => {
     } );
 
     // Are you interested in the requests of a specific IP? Try:
-    // $ journalctl -t awesome-devide REMOTE_ADDR={IP}
+    // $ journalctl -t awesome-divide REMOTE_ADDR={IP}
     // As you can see, you have to enter the field names in capital letters.
 
   } catch( e ) {
 
     // The user screwed up! This will write the error message and stack trace to
     // the journal with priority 3. Checkout your journal:
-    // $ journalctl -t awesome-devide -p 3 -o json-pretty
+    // $ journalctl -t awesome-divide -p 3 -o json-pretty
     log.err( e );
 
     res.status( 400 ).end( e.message );
