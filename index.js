@@ -3,8 +3,6 @@
 var log = require( './log.js' );
 
 
-module.exports = {};
-
 // Syslog log levels
 var levels = [
 	'emerg',
@@ -17,11 +15,29 @@ var levels = [
 	'debug'
 ];
 
-// Export a function for every log level
+// Class for journald stuff
+function Journald( defaultFields ) {
+
+	// Keep the default fields in an instance
+	if( typeof defaultFields != 'object' ) defaultFields = {};
+	this._defaultFields = defaultFields;
+
+}
+
+// Create logging methods
 for( var l in levels ) { ( function( prio, name ) {
 
-	module.exports[ name ] = function( message, fields ) {
+	// The static method is available for users without the need for default fields
+	Journald[ name ] = function( message, fields ) {
 		log( prio, message, fields );
 	};
 
+	// And the class method includes the default fields
+	Journald.prototype[ name ] = function( message, fields ) {
+		log( prio, message, fields, this._defaultFields );
+	};
+
 } )( l, levels[ l ] ); }
+
+
+module.exports = Journald;
