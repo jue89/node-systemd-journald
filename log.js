@@ -4,7 +4,7 @@ var journal = require( './build/Release/journal_send.node' );
 
 var stackTraceRE = /at ([^\ ]+) \(([^:]+):([0-9]+):[0-9]+\)$/;
 
-function obj2iovec( iovec, obj, prefix ) {
+function obj2journalFields( journalFields, obj, prefix ) {
 
 	if( prefix === undefined ) prefix = '';
 
@@ -12,15 +12,15 @@ function obj2iovec( iovec, obj, prefix ) {
 	for( var o in obj ) {
 		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
-			obj2iovec( iovec, obj[o], prefix + name + "_" );
+			obj2journalFields( journalFields, obj[o], prefix + name + "_" );
 		} else if( obj[o] !== undefined && ( prefix.length > 0 || ( name != 'PRIORITY' && name != 'MESSAGE' ) ) ) {
-			iovec.push( prefix + name + '=' + obj[o].toString() );
+			journalFields[ prefix + name ] = obj[o].toString();
 		}
 	}
 
 }
 
-function log( priority, message, fields ) {
+function log( priority, message, fields, defaultFields ) {
 
 	// If we haven't got a message, throw an error
 	if( message === undefined ) {
@@ -28,9 +28,8 @@ function log( priority, message, fields ) {
 	}
 
 	// Make sure fields is an object
-	if( typeof fields != 'object' ) {
-		fields = {};
-	}
+	if( typeof fields != 'object' ) fields = {};
+	if( typeof defaultFields != 'object' ) defaultFields = {};
 
 	// If the message is an instnce of Error, extract its message
 	if( message instanceof Error ) {
@@ -51,9 +50,9 @@ function log( priority, message, fields ) {
 			// Match regular expression and add info to iovec
 			var re = stackTraceRE.exec( errSource );
 			if( re !== null ) {
-				fields.CODE_FILE = re[2];
-				fields.CODE_FUNC = re[1];
-				fields.CODE_LINE = re[3];
+				defaultFields.code_file = re[2];
+				defaultFields.code_func = re[1];
+				defaultFields.code_line = re[3];
 			}
 
 		}
@@ -64,13 +63,22 @@ function log( priority, message, fields ) {
 
 	}
 
+	var journalFields = {};
+
+	// Add default journal fields
+	obj2journalFields( journalFields, defaultFields );
+
+	// Add journal fields - they may override the default fields
+	obj2journalFields( journalFields, fields );
+
+	// Add message
+	journalFields.MESSAGE = message;
+
+	// Convert journal fields to iovec
 	var iovec = [];
-
-	// Add default fields
-	iovec.push( "MESSAGE=" + message );
-
-	// Add additional fields
-	obj2iovec( iovec, fields );
+	for( var key in journalFields ) {
+		iovec.push( key + "=" + journalFields[ key ] );
+	}
 
 	// Send it to our beloved journald
 	journal.send.apply( null, [ parseInt( priority ) ].concat( iovec ) );
