@@ -15,11 +15,13 @@ The server will return the result of ```a``` divided by ```b```. You feel subver
 // npm install express systemd-journald
 "use strict";
 
-const log = require( 'systemd-journald' );
+const Journald = require( 'systemd-journald' );
 const app = require( 'express' )();
 
-// This will be the displayed name in the journal
-log.identifier = "awesome-divide";
+// This creates a new logging instance. The stated object defines default
+// journal fields attached to every logging entry. syslog_identifier is the
+// name displayed along with the log lines.
+const log = new Journald( { syslog_identifier: "awesome-divide" } );
 
 app.get( '/:a/:b', ( req, res ) => {
   try {
@@ -106,7 +108,8 @@ npm install systemd-journald --save
 ## API
 
 ```javascript
-const log = require( 'systemd-journald' );
+const Journald = require( 'systemd-journald' );
+const log = new Journald( defaultFields );
 
                                 // Corresponding syslog level:
 log.emerg( message, fields );   // - LOG_EMERG
@@ -121,6 +124,7 @@ log.debug( message, fields );   // - LOG_DEBUG
 
  * ```message```: String or instance of Error.
  * ```fields```: Further key-value data attached to the journal. Nested objects will be also included in the journal. ```{ "OBJ": { "NESTED": "Chuck Norris" } }``` will become ```OBJ_NESTED=Chuck Norris```. Quite handy for filtering the journal.
+ * ```defaultFields```: Fields attached to every entry. They may be overridden by ```fields```.
 
 
 ## Acknowledgement
@@ -129,6 +133,7 @@ Sepcial thanks to:
  * [ianare](https://github.com/ianare) for improving compatibility with older systemd versions.
  * [jez9999](https://github.com/jez9999) for making this module immune to future changes of syslog levels.
  * [Z3TA](https://github.com/Z3TA) is responsible for ```CODE_FILE```, ```CODE_FUNC``` and ```CODE_LINE``` being settable by the ```fields``` parameter.
+ * [bryanburgers](https://github.com/bryanburgers) introduced the idea of default fields.
 
 I owe you a drink!
 
