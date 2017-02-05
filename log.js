@@ -13,7 +13,7 @@ function obj2journalFields( journalFields, obj, prefix ) {
 		var name = o.toUpperCase();
 		if( typeof obj[o] == 'object' ) {
 			obj2journalFields( journalFields, obj[o], prefix + name + "_" );
-		} else if( obj[o] !== undefined && ( prefix.length > 0 || ( name != 'PRIORITY' && name != 'MESSAGE' ) ) ) {
+		} else if( obj[o] !== undefined && ( prefix.length > 0 || name != 'PRIORITY' ) ) {
 			journalFields[ prefix + name ] = obj[o].toString();
 		}
 	}
