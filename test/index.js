@@ -203,4 +203,34 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should set the syslog identifier", function( done ) {
+
+		var localLog = new log( { syslog_identifier: 'test-identifier' } );
+		localLog.debug( 'Test' );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'SYSLOG_IDENTIFIER' ), 'test-identifier' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
+	it( "should prefer the identifier set in the options to the global identifier", function( done ) {
+
+		var localLog = new log( { syslog_identifier: 'test-identifier' } );
+		localLog.debug( 'Test', {
+			syslog_identifier: 'local-identifier'
+		} );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'SYSLOG_IDENTIFIER' ), 'local-identifier' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
