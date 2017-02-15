@@ -1,6 +1,6 @@
 {
   "name": "systemd-journald",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Native bindings to journald",
   "keywords": [
     "logging",
@@ -22,7 +22,7 @@
     "pretest": "jshint *.js"
   },
   "dependencies": {
-    "nan": "^2.4.0"
+    "nan": "^2.5.1"
   },
   "devDependencies": {
     "jshint": "^2.9.3",
