@@ -11,7 +11,9 @@ function obj2journalFields( journalFields, obj, prefix ) {
 	// Go through all fields
 	for( var o in obj ) {
 		var name = o.toUpperCase();
-		if( typeof obj[o] == 'object' ) {
+		if( obj[o] instanceof Buffer ) {
+			journalFields[ prefix + name ] = obj[o].toString('hex');
+		} else if( typeof obj[o] == 'object' ) {
 			obj2journalFields( journalFields, obj[o], prefix + name + "_" );
 		} else if( obj[o] !== undefined && ( prefix.length > 0 || name != 'PRIORITY' ) ) {
 			journalFields[ prefix + name ] = obj[o].toString();
