@@ -31,13 +31,16 @@ function log( priority, message, fields, defaultFields ) {
 	if( typeof fields != 'object' ) fields = {};
 	if( typeof defaultFields != 'object' ) defaultFields = {};
 
+	// Object holding all data handed over to journald
+	var journalFields = {};
+
 	// If the message is an instnce of Error, extract its message
 	if( message instanceof Error ) {
 
 		var stack = message.stack.toString();
 
 		// Store stack trace and message
-		fields.STACK_TRACE = stack;
+		journalFields.STACK_TRACE = stack;
 		message = message.message;
 
 		// Try to extract callee name, line and file
@@ -50,9 +53,9 @@ function log( priority, message, fields, defaultFields ) {
 			// Match regular expression and add info to iovec
 			var re = stackTraceRE.exec( errSource );
 			if( re !== null ) {
-				defaultFields.code_file = re[2];
-				defaultFields.code_func = re[1];
-				defaultFields.code_line = re[3];
+				journalFields.CODE_FILE = re[2];
+				journalFields.CODE_FUNC = re[1];
+				journalFields.CODE_LINE = re[3];
 			}
 
 		}
@@ -62,8 +65,6 @@ function log( priority, message, fields, defaultFields ) {
 		message = message.toString();
 
 	}
-
-	var journalFields = {};
 
 	// Add default journal fields
 	obj2journalFields( journalFields, defaultFields );

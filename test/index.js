@@ -233,4 +233,19 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should not touch default fields", function( done ) {
+
+		var defaultFields = { syslog_identifier: 'test-identifier' };
+		var localLog = new log( defaultFields );
+		localLog.debug( new Error('test error') );
+
+		try {
+			assert.deepEqual( Object.keys( defaultFields ), [ 'syslog_identifier' ] );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
