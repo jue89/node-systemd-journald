@@ -233,4 +233,35 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should not touch default fields", function( done ) {
+
+		var defaultFields = { syslog_identifier: 'test-identifier' };
+		var localLog = new log( defaultFields );
+		localLog.debug( new Error('test error') );
+
+		try {
+			assert.deepEqual( Object.keys( defaultFields ), [ 'syslog_identifier' ] );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
+	it( "should convert buffers into strings", function( done ) {
+
+		log.debug( 'test', {
+			test: new Buffer([0x00, 0x01, 0x02, 0xff])
+		} );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'test' );
+			assert.strictEqual( journal_send.getField( 'TEST' ), '000102ff' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
