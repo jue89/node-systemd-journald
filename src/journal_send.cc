@@ -84,19 +84,14 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 		// Put string into the iovec
 		v8::Local<v8::String> arg = strArg.ToLocalChecked();
-		iov[i].iov_len = arg->Length();
-		iov[i].iov_base = (char*) malloc( arg->Length() + 1 );
-		arg->WriteUtf8(isolate, (char*) iov[i].iov_base, iov[i].iov_len );
+    Nan::Utf8String charVal(arg);
+		iov[i].iov_len = charVal.length();
+		iov[i].iov_base = *charVal;
 
 	}
 
 	// Send to journald
 	int ret = sd_journal_sendv( iov, argc );
-
-	// Free the memory again
-	for( int i = 0; i < argc; i++ ) {
-		free( iov[i].iov_base );
-	}
 
 	v8::Local<v8::Number> returnValue = Nan::New( ret );
 	args.GetReturnValue().Set( returnValue );
