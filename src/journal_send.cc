@@ -40,6 +40,9 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	int argc = args.Length();
 	struct iovec iov[ argc ];
 
+  auto ctx = Nan::GetCurrentContext();
+
+  auto isolate = v8::Isolate::GetCurrent();
 
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
@@ -47,14 +50,16 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 		return;
 	}
 
+  auto priorityArg = args[0]->ToInteger(ctx);
+
 	// Make sure first argument is a number
-	if( ! args[0]->IsNumber() ) {
+	if( priorityArg.IsEmpty() ) {
 		Nan::ThrowTypeError( "First argument must be a number" );
 		return;
 	}
 
 	// Get the priority
-	int64_t jsPrio = ( args[0]->ToInteger() )->Value();
+	int64_t jsPrio = priorityArg.ToLocalChecked()->Value();
 	if( jsPrio < 0 || jsPrio >= SYSLOG_PRIO_CNT ) {
 		Nan::ThrowTypeError( "Unknown priority" );
 		return;
@@ -70,18 +75,18 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
-
+    auto strArg = args[i]->ToString(ctx);
 		// First ensure that the argument is a string
-		if( ! args[i]->IsString() ) {
+		if( strArg.IsEmpty() ) {
 			Nan::ThrowTypeError( "Arguments must be strings" );
 			return;
 		}
 
 		// Put string into the iovec
-		v8::Local<v8::String> arg = args[i]->ToString();
+		v8::Local<v8::String> arg = strArg.ToLocalChecked();
 		iov[i].iov_len = arg->Length();
 		iov[i].iov_base = (char*) malloc( arg->Length() + 1 );
-		arg->WriteUtf8( (char*) iov[i].iov_base, iov[i].iov_len );
+		arg->WriteUtf8(isolate, (char*) iov[i].iov_base, iov[i].iov_len );
 
 	}
 
@@ -99,10 +104,11 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 }
 
 void init( v8::Local<v8::Object> exports ) {
+  auto ctx = Nan::GetCurrentContext();
 
 	exports->Set(
 		Nan::New("send").ToLocalChecked(),
-		Nan::New<v8::FunctionTemplate>( send )->GetFunction()
+		Nan::New<v8::FunctionTemplate>( send )->GetFunction(ctx).ToLocalChecked()
 	);
 
 }

@@ -22,7 +22,7 @@
     "pretest": "jshint *.js"
   },
   "dependencies": {
-    "nan": "^2.9.2"
+    "nan": "^2.13.2"
   },
   "devDependencies": {
     "jshint": "^2.9.3",
