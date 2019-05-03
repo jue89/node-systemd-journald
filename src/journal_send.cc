@@ -40,9 +40,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	int argc = args.Length();
 	struct iovec iov[ argc ];
 
-  auto ctx = Nan::GetCurrentContext();
-
-  auto isolate = v8::Isolate::GetCurrent();
+	auto ctx = Nan::GetCurrentContext();
 
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
@@ -50,7 +48,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 		return;
 	}
 
-  auto priorityArg = args[0]->ToInteger(ctx);
+	auto priorityArg = args[0]->ToInteger(ctx);
 
 	// Make sure first argument is a number
 	if( priorityArg.IsEmpty() ) {
@@ -75,7 +73,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
-    auto strArg = args[i]->ToString(ctx);
+		auto strArg = args[i]->ToString(ctx);
 		// First ensure that the argument is a string
 		if( strArg.IsEmpty() ) {
 			Nan::ThrowTypeError( "Arguments must be strings" );
@@ -84,7 +82,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 		// Put string into the iovec
 		v8::Local<v8::String> arg = strArg.ToLocalChecked();
-    Nan::Utf8String charVal(arg);
+		Nan::Utf8String charVal(arg);
 		iov[i].iov_len = charVal.length();
 		iov[i].iov_base = *charVal;
 
@@ -99,7 +97,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 }
 
 void init( v8::Local<v8::Object> exports ) {
-  auto ctx = Nan::GetCurrentContext();
+	auto ctx = Nan::GetCurrentContext();
 
 	exports->Set(
 		Nan::New("send").ToLocalChecked(),
