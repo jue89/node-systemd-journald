@@ -1,0 +1,8 @@
+language: node_js
+dist: xenial
+node_js:
+  - "8"
+  - "10"
+  - "12"
+before_install:
+  sudo apt update && sudo apt install build-essential pkg-config libsystemd-dev
