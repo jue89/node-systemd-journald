@@ -5,6 +5,7 @@
 
 #include <nan.h>
 
+#include <v8.h>
 // Instead of the locations being this file, let the user define their own
 // CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
 #define SD_JOURNAL_SUPPRESS_LOCATION 1
@@ -40,7 +41,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	int argc = args.Length();
 	struct iovec iov[ argc ];
 
-	auto ctx = Nan::GetCurrentContext();
+	v8::Local<v8::Context> ctx = Nan::GetCurrentContext();
 
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
@@ -48,7 +49,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 		return;
 	}
 
-	auto priorityArg = args[0]->ToInteger(ctx);
+	v8::MaybeLocal<v8::Integer> priorityArg = args[0]->ToInteger(ctx);
 
 	// Make sure first argument is a number
 	if( priorityArg.IsEmpty() ) {
@@ -97,7 +98,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 }
 
 void init( v8::Local<v8::Object> exports ) {
-	auto ctx = Nan::GetCurrentContext();
+	v8::Local<v8::Context> ctx = Nan::GetCurrentContext();
 
 	exports->Set(
 		Nan::New("send").ToLocalChecked(),
