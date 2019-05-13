@@ -41,15 +41,13 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	int argc = args.Length();
 	struct iovec iov[ argc ];
 
-	v8::Local<v8::Context> ctx = Nan::GetCurrentContext();
-
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
 		Nan::ThrowTypeError( "Not enough arugments" );
 		return;
 	}
 
-  Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(args[0]);
+	Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(args[0]);
 
 	// v8::MaybeLocal<v8::Integer> priorityArg = args[0]->ToInteger(ctx);
 
@@ -76,7 +74,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
-		auto strArg = args[i]->ToString(ctx);
+		Nan::MaybeLocal<v8::String> strArg = Nan::To<v8::String>(args[i]);
 		// First ensure that the argument is a string
 		if( strArg.IsEmpty() ) {
 			Nan::ThrowTypeError( "Arguments must be strings" );
@@ -100,11 +98,10 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 }
 
 void init( v8::Local<v8::Object> exports ) {
-	v8::Local<v8::Context> ctx = Nan::GetCurrentContext();
 
 	exports->Set(
 		Nan::New("send").ToLocalChecked(),
-		Nan::New<v8::FunctionTemplate>( send )->GetFunction(ctx).ToLocalChecked()
+		Nan::GetFunction(Nan::New<v8::FunctionTemplate>(send)).ToLocalChecked()
 	);
 
 }
