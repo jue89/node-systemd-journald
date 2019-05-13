@@ -5,6 +5,7 @@
 
 #include <nan.h>
 
+#include <v8.h>
 // Instead of the locations being this file, let the user define their own
 // CODE_FILE, CODE_LINE and CODE_FUNC, via stack trace (ex: npm callsite)
 #define SD_JOURNAL_SUPPRESS_LOCATION 1
@@ -40,21 +41,24 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	int argc = args.Length();
 	struct iovec iov[ argc ];
 
-
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
 		Nan::ThrowTypeError( "Not enough arugments" );
 		return;
 	}
 
+	Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(args[0]);
+
+	// v8::MaybeLocal<v8::Integer> priorityArg = args[0]->ToInteger(ctx);
+
 	// Make sure first argument is a number
-	if( ! args[0]->IsNumber() ) {
+	if( priorityArg.IsEmpty() ) {
 		Nan::ThrowTypeError( "First argument must be a number" );
 		return;
 	}
 
 	// Get the priority
-	int64_t jsPrio = ( args[0]->ToInteger() )->Value();
+	int64_t jsPrio = priorityArg.ToLocalChecked()->Value();
 	if( jsPrio < 0 || jsPrio >= SYSLOG_PRIO_CNT ) {
 		Nan::ThrowTypeError( "Unknown priority" );
 		return;
@@ -70,28 +74,23 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
-
+		Nan::MaybeLocal<v8::String> strArg = Nan::To<v8::String>(args[i]);
 		// First ensure that the argument is a string
-		if( ! args[i]->IsString() ) {
+		if( strArg.IsEmpty() ) {
 			Nan::ThrowTypeError( "Arguments must be strings" );
 			return;
 		}
 
 		// Put string into the iovec
-		v8::Local<v8::String> arg = args[i]->ToString();
-		iov[i].iov_len = arg->Length();
-		iov[i].iov_base = (char*) malloc( arg->Length() + 1 );
-		arg->WriteUtf8( (char*) iov[i].iov_base, iov[i].iov_len );
+		v8::Local<v8::String> arg = strArg.ToLocalChecked();
+		Nan::Utf8String charVal(arg);
+		iov[i].iov_len = charVal.length();
+		iov[i].iov_base = *charVal;
 
 	}
 
 	// Send to journald
 	int ret = sd_journal_sendv( iov, argc );
-
-	// Free the memory again
-	for( int i = 0; i < argc; i++ ) {
-		free( iov[i].iov_base );
-	}
 
 	v8::Local<v8::Number> returnValue = Nan::New( ret );
 	args.GetReturnValue().Set( returnValue );
@@ -102,7 +101,7 @@ void init( v8::Local<v8::Object> exports ) {
 
 	exports->Set(
 		Nan::New("send").ToLocalChecked(),
-		Nan::New<v8::FunctionTemplate>( send )->GetFunction()
+		Nan::GetFunction(Nan::New<v8::FunctionTemplate>(send)).ToLocalChecked()
 	);
 
 }
