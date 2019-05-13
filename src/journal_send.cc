@@ -43,13 +43,11 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Make sure nobody forgot the arguments
 	if( argc < 2 ) {
-		Nan::ThrowTypeError( "Not enough arugments" );
+		Nan::ThrowTypeError( "Not enough arguments" );
 		return;
 	}
 
 	Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(args[0]);
-
-	// v8::MaybeLocal<v8::Integer> priorityArg = args[0]->ToInteger(ctx);
 
 	// Make sure first argument is a number
 	if( priorityArg.IsEmpty() ) {
