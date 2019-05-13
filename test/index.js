@@ -286,6 +286,6 @@ describe( "node-systemd-journald", function() {
 describe("real module", function() {
 	it("should not crash when logging", function() {
 		var log = require( '../index.js' );
-		log.debug("debug message");
+		log.debug("debug message", {test: true});
 	})
 })

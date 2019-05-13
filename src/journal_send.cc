@@ -83,12 +83,16 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 		v8::Local<v8::String> arg = strArg.ToLocalChecked();
 		Nan::Utf8String charVal(arg);
 		iov[i].iov_len = charVal.length();
-		iov[i].iov_base = *charVal;
-
+		iov[i].iov_base = strdup( *charVal );
 	}
 
 	// Send to journald
 	int ret = sd_journal_sendv( iov, argc );
+
+	// Free the memory again
+	for( int i = 0; i < argc; i++ ) {
+		free( iov[i].iov_base );
+	}
 
 	v8::Local<v8::Number> returnValue = Nan::New( ret );
 	args.GetReturnValue().Set( returnValue );
