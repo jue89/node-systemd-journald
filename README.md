@@ -1,34 +1,31 @@
 # node-systemd-journald
 
+[![Build Status](https://travis-ci.org/jue89/node-systemd-journald.svg?branch=master)](https://travis-ci.org/jue89/node-systemd-journald)
+
 Node.js module for native bindings to the ~~dearly beloved~~ systemd-journald.
-
-Successfully tested under NodeJS v0.10.48, v0.12.18, v4.8.7, v6.13.0, v8.9.4, v9.6.1
-
 
 ## Example
 
-This example will start an ExpressJS server. Open your browser and visit: ```http://localhost:3000/{a}/{b}```
+This example will start an ExpressJS server. Open your browser and visit: `http://localhost:3000/{a}/{b}`
 
-The server will return the result of ```a``` divided by ```b```. You feel subversive and may want to try ```b``` equals zero?! ;)
+The server will return the result of `a` divided by `b`. You feel subversive and may want to try `b` equals zero?! ;)
 
 ```javascript
 // npm install express systemd-journald
-"use strict";
-
-const Journald = require( 'systemd-journald' );
-const app = require( 'express' )();
+const Journald = require('systemd-journald');
+const app = require('express')();
 
 // This creates a new logging instance. The stated object defines default
 // journal fields attached to every logging entry. syslog_identifier is the
 // name displayed along with the log lines.
-const log = new Journald( { syslog_identifier: "awesome-divide" } );
+const log = new Journald({syslog_identifier: 'awesome-divide'});
 
-app.get( '/:a/:b', ( req, res ) => {
+app.get('/:a/:b', (req, res) => {
   try {
 
     // Convert numbers
-    let a = parseInt( req.params.a );
-    let b = parseInt( req.params.b );
+    let a = parseInt(req.params.a);
+    let b = parseInt(req.params.b);
 
     // Divide a by b
     let q = a / b;
@@ -38,36 +35,36 @@ app.get( '/:a/:b', ( req, res ) => {
     // if( typeof q != 'number' ) ...
     // Well, this was not working. Infinity is recognised as 'number' and, you
     // might already guessed it, NaN as well! Javascript as we know and love it.
-    if( isNaN( q ) || q === Infinity ) throw new Error( "No number!" );
+    if(isNaN(q) || q === Infinity ) throw new Error('No number!');
 
     // Send the result to the client
-    res.end( q.toString() );
+    res.end(q.toString());
 
     // Log this request with priority 7
-    log.debug( "Just answered a request", {
+    log.debug('Just answered a request', {
       'dividend'   : a,
       'divisor'    : b,
       'quotient'   : q,
       'remote_addr': req.connection.remoteAddress
-    } );
+    });
 
     // Are you interested in the requests of a specific IP? Try:
     // $ journalctl -t awesome-divide REMOTE_ADDR={IP}
     // As you can see, you have to enter the field names in capital letters.
 
-  } catch( e ) {
+  } catch(e) {
 
     // The user screwed up! This will write the error message and stack trace to
     // the journal with priority 3. Checkout your journal:
     // $ journalctl -t awesome-divide -p 3 -o json-pretty
-    log.err( e );
+    log.err(e);
 
-    res.status( 400 ).end( e.message );
+    res.status(400).end(e.message);
 
   }
-} );
+});
 
-app.listen( 3000 );
+app.listen(3000);
 ```
 
 
@@ -122,9 +119,9 @@ log.info( message, fields );    // - LOG_INFO
 log.debug( message, fields );   // - LOG_DEBUG
 ```
 
- * ```message```: String or instance of Error.
- * ```fields```: Further key-value data attached to the journal. Nested objects will be also included in the journal. ```{ "OBJ": { "NESTED": "Chuck Norris" } }``` will become ```OBJ_NESTED=Chuck Norris```. Quite handy for filtering the journal.
- * ```defaultFields```: Fields attached to every entry. They may be overridden by ```fields```.
+ * `message`: String or instance of Error.
+ * `fields`: Further key-value data attached to the journal. Nested objects will be also included in the journal. Keys will be converted to upper-case. `{'obj': {'nested': 'Chuck Norris'}}` will become `OBJ_NESTED=Chuck Norris`. Quite handy for filtering the journal.
+ * `defaultFields`: Fields attached to every entry. They may be overridden by `fields`.
 
 
 ## Acknowledgement
@@ -132,8 +129,9 @@ log.debug( message, fields );   // - LOG_DEBUG
 Sepcial thanks to:
  * [ianare](https://github.com/ianare) for improving compatibility with older systemd versions.
  * [jez9999](https://github.com/jez9999) for making this module immune to future changes of syslog levels.
- * [Z3TA](https://github.com/Z3TA) is responsible for ```CODE_FILE```, ```CODE_FUNC``` and ```CODE_LINE``` being settable by the ```fields``` parameter.
+ * [Z3TA](https://github.com/Z3TA) is responsible for `CODE_FILE`, `CODE_FUNC` and `CODE_LINE` being settable by the `fields` parameter.
  * [bryanburgers](https://github.com/bryanburgers) introduced the idea of default fields.
+ * [spion](https://github.com/spion) for introducing compatibility with NodeJS 12 while preserving compatibility down to Node 0.10.
 
 I owe you a drink!
 
