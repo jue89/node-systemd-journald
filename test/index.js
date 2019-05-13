@@ -264,6 +264,22 @@ describe( "node-systemd-journald", function() {
 
 	} );
 
+	it( "should convert null into string 'null'", function( done ) {
+
+		log.debug( 'test', {
+			test: null
+		} );
+
+		try {
+			assert.strictEqual( journal_send.getField( 'MESSAGE' ), 'test' );
+			assert.strictEqual( journal_send.getField( 'TEST' ), 'null' );
+			done();
+		} catch( e ) {
+			done( e );
+		}
+
+	} );
+
 } );
 
 
