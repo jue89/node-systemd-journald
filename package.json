@@ -1,6 +1,6 @@
 {
   "name": "systemd-journald",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Native bindings to journald",
   "keywords": [
     "logging",
