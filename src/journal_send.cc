@@ -35,10 +35,8 @@ const char *const syslogPrio[] = {
 #define PRIO_FIELD_NAME "PRIORITY="
 #define PRIO_FIELD_NAME_LEN 9
 
-
-void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
-
-	int argc = args.Length();
+NAN_METHOD( send ) {
+	int argc = info.Length();
 	struct iovec iov[ argc ];
 
 	// Make sure nobody forgot the arguments
@@ -47,7 +45,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 		return;
 	}
 
-	Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(args[0]);
+	Nan::MaybeLocal<v8::Integer> priorityArg = Nan::To<v8::Integer>(info[0]);
 
 	// Make sure first argument is a number
 	if( priorityArg.IsEmpty() ) {
@@ -72,7 +70,7 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
-		Nan::MaybeLocal<v8::String> strArg = Nan::To<v8::String>(args[i]);
+		Nan::MaybeLocal<v8::String> strArg = Nan::To<v8::String>(info[i]);
 		// First ensure that the argument is a string
 		if( strArg.IsEmpty() ) {
 			Nan::ThrowTypeError( "Arguments must be strings" );
@@ -95,17 +93,11 @@ void send( const Nan::FunctionCallbackInfo<v8::Value>& args ) {
 	}
 
 	v8::Local<v8::Number> returnValue = Nan::New( ret );
-	args.GetReturnValue().Set( returnValue );
-
+	info.GetReturnValue().Set( returnValue );
 }
 
-void init( v8::Local<v8::Object> exports ) {
-
-	exports->Set(
-		Nan::New("send").ToLocalChecked(),
-		Nan::GetFunction(Nan::New<v8::FunctionTemplate>(send)).ToLocalChecked()
-	);
-
+NAN_MODULE_INIT( init ) {
+	NAN_EXPORT(target, send);
 }
 
 NODE_MODULE( journal_send, init )
