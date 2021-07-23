@@ -1,8 +1,28 @@
 {
-	"targets": [ {
-		"target_name":  "journal_send",
-		"sources":      [ "src/journal_send.cc" ],
-		"include_dirs": [ "<!(node -e \"require('nan')\")" ],
-		"libraries":    [ "<!@(pkg-config --libs-only-l --silence-errors libsystemd || pkg-config --libs-only-l libsystemd-journal)" ]
-	} ]
+	"targets": [
+		{
+			"target_name": "journal_send",
+			"sources": [
+				"src/journal_send.cc"
+			],
+			"libraries": [
+        "-lsystemd",
+      ],
+			'cflags!': [ '-fno-exceptions' ],
+      'cflags_cc!': [ '-fno-exceptions' ],
+      'include_dirs': ["<!@(node -p \"require('node-addon-api').include\")"],
+      'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
+      'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
+      'conditions': [
+        [
+					'OS=="mac"',
+          {
+            'xcode_settings': {
+              'MACOSX_DEPLOYMENT_TARGET': '10.9',
+            },
+          }
+        ]
+			]
+		} 
+	]
 }
