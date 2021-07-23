@@ -240,7 +240,7 @@ describe( "node-systemd-journald", function() {
 		localLog.debug( new Error('test error') );
 
 		try {
-			assert.deepEqual( Object.keys( defaultFields ), [ 'syslog_identifier' ] );
+			assert.deepStrictEqual( Object.keys( defaultFields ), [ 'syslog_identifier' ] );
 			done();
 		} catch( e ) {
 			done( e );
@@ -251,7 +251,7 @@ describe( "node-systemd-journald", function() {
 	it( "should convert buffers into strings", function( done ) {
 
 		log.debug( 'test', {
-			test: new Buffer([0x00, 0x01, 0x02, 0xff])
+			test: Buffer.from([0x00, 0x01, 0x02, 0xff])
 		} );
 
 		try {
