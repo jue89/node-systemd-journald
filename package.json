@@ -22,11 +22,12 @@
     "pretest": "jshint *.js"
   },
   "dependencies": {
-    "nan": "^2.14.0"
+    "@mapbox/node-pre-gyp": "^1.0.5",
+    "node-addon-api": "^4.0.0"
   },
   "devDependencies": {
     "jshint": "^2.11.0",
-    "mocha": "^2.5.3",
+    "mocha": "^9.0.2",
     "mockery": "^1.7.0"
   },
   "os": [
