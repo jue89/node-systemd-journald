@@ -22,65 +22,60 @@
 // Create an array of all Syslog priority numbers
 #define SYSLOG_PRIO_CNT 8
 const char *const syslogPrio[] = {
-		TO_STR(LOG_EMERG),	 // jsPrio: 0
-		TO_STR(LOG_ALERT),	 // jsPrio: 1
-		TO_STR(LOG_CRIT),		 // jsPrio: 2
-		TO_STR(LOG_ERR),		 // jsPrio: 3
-		TO_STR(LOG_WARNING), // jsPrio: 4
-		TO_STR(LOG_NOTICE),	 // jsPrio: 5
-		TO_STR(LOG_INFO),		 // jsPrio: 6
-		TO_STR(LOG_DEBUG)		 // jsPrio: 7
+	TO_STR( LOG_EMERG ),   // jsPrio: 0
+	TO_STR( LOG_ALERT ),   // jsPrio: 1
+	TO_STR( LOG_CRIT ),    // jsPrio: 2
+	TO_STR( LOG_ERR ),     // jsPrio: 3
+	TO_STR( LOG_WARNING ), // jsPrio: 4
+	TO_STR( LOG_NOTICE ),  // jsPrio: 5
+	TO_STR( LOG_INFO ),    // jsPrio: 6
+	TO_STR( LOG_DEBUG )    // jsPrio: 7
 };
 
 #define PRIO_FIELD_NAME "PRIORITY="
 #define PRIO_FIELD_NAME_LEN 9
 
-Napi::Value Send(const Napi::CallbackInfo &info)
+Napi::Value Send( const Napi::CallbackInfo &info )
 {
 	Napi::Env env = info.Env();
 	Napi::HandleScope scope(env);
 	int argc = info.Length();
-	struct iovec iov[argc];
+	struct iovec iov[ argc ];
 
 	// Make sure nobody forgot the arguments
-	if (argc < 2)
-	{
-		Napi::TypeError::New(env, "Not enough arguments").ThrowAsJavaScriptException();
+	if( argc < 2 ) {
+		Napi::TypeError::New( env, "Not enough arguments" ).ThrowAsJavaScriptException();
 		return env.Null();
 	}
 
 	Napi::Number priorityArg = info[0].As<Napi::Number>();
 
 	// Make sure first argument is a number
-	if (priorityArg.IsEmpty())
-	{
-		Napi::TypeError::New(env, "First argument must be a number").ThrowAsJavaScriptException();
+	if( priorityArg.IsEmpty() ) {
+		Napi::TypeError::New( env, "First argument must be a number" ).ThrowAsJavaScriptException();
 		return env.Null();
 	}
 
 	// Get the priority
 	int64_t jsPrio = priorityArg.Int64Value();
-	if (jsPrio < 0 || jsPrio >= SYSLOG_PRIO_CNT)
-	{
+	if( jsPrio < 0 || jsPrio >= SYSLOG_PRIO_CNT ) {
 		Napi::TypeError::New(env, "Unknown priority").ThrowAsJavaScriptException();
 		return env.Null();
 	}
 
 	// Convert JavaScript priority to Syslog priority
-	size_t strLen = PRIO_FIELD_NAME_LEN + strlen(syslogPrio[jsPrio]);
+	size_t strLen = PRIO_FIELD_NAME_LEN + strlen( syslogPrio[jsPrio] );
 	iov[0].iov_len = strLen;
-	iov[0].iov_base = (char *)malloc(strLen + 1);
-	snprintf((char *)iov[0].iov_base, strLen + 1,
-					 "%s%s", PRIO_FIELD_NAME, syslogPrio[jsPrio]);
+	iov[0].iov_base = (char *) malloc( strLen + 1 );
+	snprintf( (char *) iov[0].iov_base, strLen + 1,
+					 "%s%s", PRIO_FIELD_NAME, syslogPrio[jsPrio] );
 
 	// Copy all remaining arguments to the iovec
-	for (int i = 1; i < argc; i++)
-	{
+	for( int i = 1; i < argc; i++ ) {
 		Napi::String strArg = info[i].As<Napi::String>();
 		// First ensure that the argument is a string
-		if (strArg.IsEmpty())
-		{
-			Napi::TypeError::New(env, "Arguments must be strings").ThrowAsJavaScriptException();
+		if( strArg.IsEmpty() ) {
+			Napi::TypeError::New( env, "Arguments must be strings" ).ThrowAsJavaScriptException();
 			return env.Null();
 		}
 
@@ -88,28 +83,24 @@ Napi::Value Send(const Napi::CallbackInfo &info)
 		Napi::String arg = strArg;
 		std::string charVal = arg.As<Napi::String>();
 		iov[i].iov_len = charVal.length();
-		iov[i].iov_base = strdup(charVal.c_str());
+		iov[i].iov_base = strdup( charVal.c_str() );
 	}
 
 	// Send to journald
-	int ret = sd_journal_sendv(iov, argc);
+	int ret = sd_journal_sendv( iov, argc );
 
 	// Free the memory again
-	for (int i = 0; i < argc; i++)
-	{
-		free(iov[i].iov_base);
+	for( int i = 0; i < argc; i++ ) {
+		free( iov[i].iov_base );
 	}
 
-	Napi::Number returnValue = Napi::Number::New(env, ret);
+	Napi::Number returnValue = Napi::Number::New( env, ret );
 	return returnValue;
 }
 
-static Napi::Object Init(Napi::Env env, Napi::Object exports)
-{
-	exports.Set(Napi::String::New(env, "send"), Napi::Function::New(env, Send));
+static Napi::Object Init( Napi::Env env, Napi::Object exports ) {
+	exports.Set( Napi::String::New(env, "send"), Napi::Function::New(env, Send) );
 	return exports;
 }
 
-// NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init)
-
-NODE_API_MODULE(journal_send, Init)
+NODE_API_MODULE( journal_send, Init )
