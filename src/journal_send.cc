@@ -65,9 +65,9 @@ Napi::Value Send( const Napi::CallbackInfo &info ) {
 	// Convert JavaScript priority to Syslog priority
 	size_t strLen = PRIO_FIELD_NAME_LEN + strlen( syslogPrio[jsPrio] );
 	iov[0].iov_len = strLen;
-	iov[0].iov_base = (char *) malloc( strLen + 1 );
-	snprintf( (char *) iov[0].iov_base, strLen + 1,
-					 "%s%s", PRIO_FIELD_NAME, syslogPrio[jsPrio] );
+	iov[0].iov_base = (char*) malloc( strLen + 1 );
+	snprintf( (char*) iov[0].iov_base, strLen + 1,
+	          "%s%s", PRIO_FIELD_NAME, syslogPrio[jsPrio] );
 
 	// Copy all remaining arguments to the iovec
 	for( int i = 1; i < argc; i++ ) {
