@@ -35,8 +35,7 @@ const char *const syslogPrio[] = {
 #define PRIO_FIELD_NAME "PRIORITY="
 #define PRIO_FIELD_NAME_LEN 9
 
-Napi::Value Send( const Napi::CallbackInfo &info )
-{
+Napi::Value Send( const Napi::CallbackInfo &info ) {
 	Napi::Env env = info.Env();
 	Napi::HandleScope scope(env);
 	int argc = info.Length();
