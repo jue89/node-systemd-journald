@@ -1,7 +1,3 @@
-// Down below you will find the most intuitive code you probably ever saw on the
-// Internet. It just copies an ordinary JavaScript string array into an iovec
-// and then finally calls sd_journal_sendv. Rocket science included!
-
 #include <napi.h>
 #include <uv.h>
 
