@@ -79,14 +79,6 @@ sudo apt-get install build-essential \
                      libsystemd-dev
 ```
 
-If the above doesn't work, it is likely that you are using an older version of systemd as it is shipped with Ubuntu <= 14.04 or Mint <= 17. No problem just try this instead:
-
-```bash
-sudo apt-get install build-essential \
-                     pkg-config \
-                     libsystemd-journal-dev
-```
-
 RHEL 7 flavoured Linux distributions:
 
 ```bash
@@ -132,10 +124,13 @@ Sepcial thanks to:
  * [Z3TA](https://github.com/Z3TA) is responsible for `CODE_FILE`, `CODE_FUNC` and `CODE_LINE` being settable by the `fields` parameter.
  * [bryanburgers](https://github.com/bryanburgers) introduced the idea of default fields.
  * [spion](https://github.com/spion) for introducing compatibility with NodeJS 12 while preserving compatibility down to Node 0.10.
+ * [GaikwadPratik](https://github.com/GaikwadPratik) for porting this module from NAN to Node-API.
 
 I owe you a drink!
 
 
 ## Why?
 
-This module has been written after some unsuccessful attempts to get the module [journald](https://www.npmjs.com/package/journald) version 0.0.5 working under NodeJS 4.x / 5.x. Due to massive API changes of the v8 engine this module is fully broken from the point of view of recent NodeJS releases. So I rewrote it - this time with a little help of *Native Abstractions for Node.js* (nan). The nice guys from nan promised to ensure compatibility even on future API changes of v8. We will see ;)
+This module has been written after some unsuccessful attempts to get the module [journald](https://www.npmjs.com/package/journald) version 0.0.5 working under NodeJS 4.x / 5.x. Due to massive API changes of the v8 engine this module is fully broken from the point of view of recent NodeJS releases. So I rewrote it - this time with a little help of *Native Abstractions for Node.js* (nan). The nice guys from nan promised to ensure compatibility even on future API changes of v8. ~~We will see ;)~~
+
+Update: They've kept the promise - but we've changed to the on-board solution for native modules: *Node-API*. We hope to have even less problems with keeping this module compatible to NodeJS.
